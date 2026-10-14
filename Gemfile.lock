@@ -15,6 +15,7 @@ GEM
     mcp (1.7.0)
       json_schemer (>= 2.4)
     nio4r (2.7.5)
+    openssl (4.0.2)
     puma (8.0.2)
       nio4r (~> 2.0)
     rack (3.2.7)
@@ -29,6 +30,7 @@ DEPENDENCIES
   fusionauth_client
   jwt
   mcp
+  openssl (>= 4.0)
   puma
   rack
 
