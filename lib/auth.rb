@@ -62,7 +62,9 @@ module McpOAuth
     private
 
     def discover_jwks_uri
-      document = Net::HTTP.get(URI("#{@issuer}/.well-known/openid-configuration"))
+      url = "#{@issuer}/.well-known/openid-configuration"
+      warn "[mcp-oauth] fetching OIDC discovery document: #{url}"
+      document = Net::HTTP.get(URI(url))
       JSON.parse(document).fetch("jwks_uri")
     end
   end
@@ -76,6 +78,7 @@ module McpOAuth
     def keys
       return @keys if @keys && (Time.now - @fetched_at) < @ttl
 
+      warn "[mcp-oauth] fetching JWKS: #{@uri}"
       @keys = JSON.parse(Net::HTTP.get(URI(@uri)))
       @fetched_at = Time.now
       @keys
