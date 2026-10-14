@@ -24,10 +24,18 @@ module McpOAuth
       @jwks_uri = jwks_uri
     end
 
-    def self.from_env
+    def self.from_env(require_oidc: true)
+      if require_oidc
+        issuer = ENV.fetch("OIDC_ISSUER") { abort "OIDC_ISSUER is required (e.g. https://idp.example.com)" }
+        audience = ENV.fetch("OIDC_AUDIENCE") { abort "OIDC_AUDIENCE is required (the token audience for this MCP server)" }
+      else
+        issuer = ENV["OIDC_ISSUER"]
+        audience = ENV["OIDC_AUDIENCE"]
+      end
+
       new(
-        issuer: ENV.fetch("OIDC_ISSUER") { abort "OIDC_ISSUER is required (e.g. https://idp.example.com)" },
-        audience: ENV.fetch("OIDC_AUDIENCE") { abort "OIDC_AUDIENCE is required (the token audience for this MCP server)" },
+        issuer: issuer,
+        audience: audience,
         resource_url: ENV.fetch("RESOURCE_URL", "http://localhost:9292/mcp"),
         jwks_uri: ENV["OIDC_JWKS_URI"],
       )

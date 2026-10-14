@@ -20,6 +20,7 @@ The server reads its settings from environment variables.
 | `OIDC_AUDIENCE` | Yes | | The only audience the server accepts. The server verifies the `aud` claim against it. |
 | `OIDC_JWKS_URI` | No | Discovered | Where to fetch the IdP's JSON Web Key Set. Defaults to the `jwks_uri` in the issuer's OpenID configuration. |
 | `RESOURCE_URL` | No | `http://localhost:9292/mcp` | Public URL of the MCP endpoint, used in the protected-resource metadata. |
+| `DISABLE_AUTH` | No | `false` | Set to `true` to run the server with no auth middleware and no protected-resource metadata endpoint, for comparison against an unprotected MCP server. `OIDC_ISSUER`/`OIDC_AUDIENCE` are not required in this mode. |
 
 See `.env.example` for a template.
 
@@ -53,6 +54,23 @@ TOKEN_GOODBYE=<token carrying the goodbye scope> \
 ```
 
 The script calls `greet` and `goodbye` with no token, a garbage token, and each scope token, and prints the HTTP status and response body for every case.
+
+### Comparing against an unauthenticated server
+
+To see what the same server returns with no auth protection at all, run it with `DISABLE_AUTH=true` (no `OIDC_ISSUER`/`OIDC_AUDIENCE` needed):
+
+```
+DISABLE_AUTH=true bundle exec puma config.ru
+```
+
+Then call it with no token and no challenge is returned, just the tool result:
+
+```
+curl -s -X POST http://localhost:9292/mcp \
+  -H 'content-type: application/json' \
+  -H 'accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"greet","arguments":{"name":"Ada"}}}'
+```
 
 ## Project layout
 
