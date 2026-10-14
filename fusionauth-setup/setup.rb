@@ -81,20 +81,22 @@ def main
 
   puts "Created application: #{app_id}"
 
-  # Create get_name scope
-  scope_id = SecureRandom.uuid
-  scope_request = {
-    scope: {
-      name: "get_name",
-      description: "Allow calling the get_name MCP tool",
-      required: false,
-    },
-  }
-  scope_resp = client.create_o_auth_scope(app_id, scope_id, scope_request)
-  unless scope_resp.was_successful
-    abort "Failed to create scope: #{scope_resp.status} #{scope_resp.error_response.inspect}"
+  # Create the greet and goodbye scopes required by the MCP server's tools
+  %w[greet goodbye].each do |scope_name|
+    scope_id = SecureRandom.uuid
+    scope_request = {
+      scope: {
+        name: scope_name,
+        description: "Allow calling the #{scope_name} MCP tool",
+        required: false,
+      },
+    }
+    scope_resp = client.create_o_auth_scope(app_id, scope_id, scope_request)
+    unless scope_resp.was_successful
+      abort "Failed to create scope: #{scope_resp.status} #{scope_resp.error_response.inspect}"
+    end
+    puts "Created scope: #{scope_name}"
   end
-  puts "Created scope: get_name"
 
   # Create test user
   user_id = SecureRandom.uuid
@@ -127,7 +129,7 @@ def main
 
   # Output MCP client config
   puts "\n=== MCP client configuration (for mcp-remote) ==="
-  client_info = { client_id: app_id, scope: "openid profile get_name" }.to_json
+  client_info = { client_id: app_id, scope: "openid profile greet goodbye" }.to_json
   puts JSON.pretty_generate(
     "mcpServers" => {
       "name-server" => {

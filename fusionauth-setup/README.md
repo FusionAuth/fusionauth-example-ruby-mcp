@@ -6,9 +6,9 @@ All scripts require an API key, tenant ID, and instance URL. The instance URL ma
 
 ## Scripts
 
-- `setup.rb`: creates an OAuth application (PKCE, refresh token, strict scope handling, authorized resource URIs set to the MCP server), adds the `get_name` scope, creates a test user (`test@example.com`/`password`), registers the user to the application, and prints MCP client config for `mcp-remote`.
+- `setup.rb`: creates an OAuth application (PKCE, refresh token, strict scope handling, authorized resource URIs set to the MCP server), adds the `greet` and `goodbye` scopes required by the MCP server's tools, creates a test user (`test@example.com`/`password`), registers the user to the application, and prints MCP client config for `mcp-remote`.
 - `register_client.rb`: creates or reuses an OAuth application (via `--existing-app-id`) and prints MCP client config.
-- `create_scope.rb`: adds a custom OAuth scope to an existing application.
+- `create_scope.rb`: adds a custom OAuth scope to an existing application (defaults to `greet`; run again with `--scope-name goodbye` to add the other).
 - `create_test_user.rb`: creates a test user and optionally registers it to an application.
 
 ## Usage

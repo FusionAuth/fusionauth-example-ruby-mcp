@@ -71,7 +71,7 @@ def main
   resp = client.create_application(app_id, req)
   if resp.was_successful
     puts "App: #{app_id}"
-    client_info = { client_id: app_id, scope: "openid profile get_name" }.to_json
+    client_info = { client_id: app_id, scope: "openid profile greet goodbye" }.to_json
     puts JSON.pretty_generate(
       "mcpServers" => {
         "name-server" => {

@@ -10,7 +10,7 @@ def parse_args
     api_key: nil,
     base_url: "http://localhost:9011",
     application_id: nil,
-    scope_name: "get_name",
+    scope_name: "greet",
   }
 
   parser = OptionParser.new do |opts|
